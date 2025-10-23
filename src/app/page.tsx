@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import { BiTargetLock } from 'react-icons/bi';
 import { IoClose } from 'react-icons/io5';
 
 const taxBrackets = [
