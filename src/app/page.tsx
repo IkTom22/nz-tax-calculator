@@ -65,7 +65,7 @@ export default function Home() {
           onSubmit={handleSubmit}
           className="w-full flex flex-col items-center gap-6 text-2xl px-4"
         >
-          <div className="w-full space-y-2">
+          <div className="w-full flex flex-col gap-2">
             <label
               htmlFor="annual-income"
               className="w-full text-center text-[20px]"
