@@ -1,24 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { CountryCode } from '@/src/data/taxBracketsByCountries';
+import { calculateTax, formatNumberWithCommas } from '@/src/utils/taxUtils';
 import { IoClose } from 'react-icons/io5';
 
-const taxBrackets = {
-  nz: [
-    { upto: 15600, rate: 0.105 },
-    { upto: 53500, rate: 0.175 },
-    { upto: 78100, rate: 0.3 },
-    { upto: 180000, rate: 0.33 },
-    { upto: Infinity, rate: 0.39 },
-  ],
-  au: [
-    { upto: 18200, rate: 0 },
-    { upto: 45000, rate: 0.16 },
-    { upto: 135000, rate: 0.3 },
-    { upto: 190000, rate: 0.37 },
-    { upto: Infinity, rate: 0.45 },
-  ],
-};
-type CountryCode = 'nz' | 'au';
 export default function Home() {
   const [annualIncome, setAnnualIncome] = useState('');
   const [calcResult, setCalcResult] = useState(0);
@@ -43,39 +28,17 @@ export default function Home() {
     setAnnualIncome(amount);
   };
 
-  const addCommasToStr = (str: string) => {
-    const parts = str.split('.');
-    // use unary + to convert str-num
-    console.log('parts[0]', parts[0]);
-    parts[0] = (+parts[0]).toLocaleString('en');
-    return parts.join('.');
-  };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    let previousUpto = 0;
-    let tax = 0;
     const incomeNum = +annualIncome;
     if (isNaN(incomeNum)) {
       setCalcResult(0);
       return;
     }
-    for (const bracket of taxBrackets[selectedCountry]) {
-      const { upto, rate } = bracket;
-      console.log('incomeNum: ', incomeNum, ' upto: ', upto, ' rate: ', rate);
-      if (incomeNum > upto) {
-        // if the incomeNum is bigger than 'upto' amount
-        //calculate and add the tax for the bracket, update previousUpto to upto, continue the loop
-        tax += (upto - previousUpto) * rate;
-        previousUpto = upto;
-      } else {
-        // otherwise calculate and add the tax and break the loop
-        tax += (incomeNum - previousUpto) * rate;
-        break;
-      }
-    }
-    // unary + is used to convert to number
-    setCalcResult(+tax.toFixed(2)); // Round to 2 decimal places
-    setTakeHome(+(incomeNum - tax).toFixed(2));
+    const tax = calculateTax(incomeNum, selectedCountry);
+
+    setCalcResult(tax);
+    setTakeHome(+(incomeNum - tax).toFixed(2)); // unary + is used to convert to number
   };
 
   // Clear input
@@ -151,7 +114,7 @@ export default function Home() {
               <input
                 type="text"
                 id="annual-income"
-                value={annualIncome ? addCommasToStr(annualIncome) : ''}
+                value={annualIncome ? formatNumberWithCommas(annualIncome) : ''}
                 placeholder="0"
                 onChange={handleAmountChange}
                 className="w-full px-12 py-2 text-right rounded-[10px]"
@@ -176,7 +139,7 @@ export default function Home() {
             Calculate
           </button>
         </form>
-        <div className="w-full rounded-2xl mt-6">
+        <div className="w-full mt-6">
           <div className="w-full flex justify-between items-center text-2xl">
             <div className="w-[45%] md:w-[32%]">Tax to Pay:</div>
             <div className="w-[55%] md:w-[67%] flex justify-between bg-sky-900 px-4 py-2 rounded-[10px] text-white">
@@ -185,12 +148,13 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="w-full rounded-2xl mt-6">
+        <hr className="w-full text-slate-400" />
+        <div className="w-full">
           <div className="w-full flex justify-between items-center text-2xl">
             <div className="w-[45%] md:w-[32%]">Take Home:</div>
             <div className="w-[55%] md:w-[67%] flex justify-between bg-sky-900 px-4 py-2 rounded-[10px] text-white">
               <span>$</span>
-              <span>{takeHome}</span>
+              <span>{takeHome.toLocaleString('en')}</span>
             </div>
           </div>
         </div>
