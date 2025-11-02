@@ -1,6 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { CountryCode } from '@/src/data/taxBracketsByCountries';
+import {
+  CountryCode,
+  taxBracketsByCountries,
+} from '@/src/data/taxBracketsByCountries';
 import {
   calculateTax,
   formatNumberWithCommas,
@@ -60,6 +63,18 @@ const CalculatorForm = (props: CalculatorFormProps) => {
     setTakeHome(0);
   };
 
+  const chooseCountry = (country: CountryCode) => {
+    switch (country) {
+      case 'nz':
+        return 'NZ';
+      case 'au':
+        return 'AU';
+      case 'sg':
+        return 'SG';
+      default:
+        return 'NZ';
+    }
+  };
   return (
     <div className="w-full flex flex-col gap-4">
       <form
@@ -70,12 +85,12 @@ const CalculatorForm = (props: CalculatorFormProps) => {
         <fieldset className="w-full">
           <legend>Select your country:</legend>
           <div className="flex w-full justify-between mt-2">
-            {['nz', 'au'].map((country) => (
+            {Object.keys(taxBracketsByCountries).map((country) => (
               <div className="flex gap-2 items-center" key={country}>
                 <input
                   type="radio"
                   id={`${country}-tax`}
-                  title="New Zealand"
+                  title={country}
                   name="country"
                   value={country}
                   checked={selectedCountry === country}
@@ -83,7 +98,7 @@ const CalculatorForm = (props: CalculatorFormProps) => {
                   className="appearance-none h-6 w-6 rounded-full checked:bg-sky-600 border-sky-900 border focus:ring-2 focus:ring-sky-500"
                 />
                 <label htmlFor={`${country}-tax`}>
-                  {country === 'nz' ? 'New Zealand' : 'Australia'}
+                  {chooseCountry(country as CountryCode)}
                 </label>
               </div>
             ))}
