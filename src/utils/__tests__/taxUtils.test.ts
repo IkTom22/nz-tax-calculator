@@ -1,4 +1,4 @@
-import { calculateTax } from '../taxUtils';
+import { calculateTax, sanitiseStringNum } from '../taxUtils';
 // AU tax refference: https://moneysmart.gov.au/work-and-tax/income-tax-calculator
 
 describe('calculateTax', () => {
@@ -13,5 +13,14 @@ describe('calculateTax', () => {
     expect(calculateTax(35000, 'au')).toBe(2688);
     expect(calculateTax(100000, 'au')).toBe(20788);
     expect(calculateTax(220000, 'au')).toBe(65138);
+  });
+});
+
+describe('sanitiseStringNum', () => {
+  test('remove non degit, non dot characters', () => {
+    expect(sanitiseStringNum('1g2iua3.4a5')).toBe('123.45');
+  });
+  test('handle multiple dots', () => {
+    expect(sanitiseStringNum('12345.6.7')).toBe('12345.6');
   });
 });

@@ -18,7 +18,7 @@ export default function Home() {
         />
         {/* Tax display */}
         <ResultDisplay label="Tax to Pay:" value={calcResult} />
-        <hr className="w-full text-slate-400 mt-2 mb-2" />
+        <hr className="w-full text-slate-400 my-2" />
         {/* Take home display */}
         <ResultDisplay label="Take Home:" value={takeHome} />
       </div>

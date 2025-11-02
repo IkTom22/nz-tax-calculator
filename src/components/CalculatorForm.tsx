@@ -1,7 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { CountryCode } from '@/src/data/taxBracketsByCountries';
-import { calculateTax, formatNumberWithCommas } from '@/src/utils/taxUtils';
+import {
+  calculateTax,
+  formatNumberWithCommas,
+  sanitiseStringNum,
+} from '@/src/utils/taxUtils';
 import { IoClose } from 'react-icons/io5';
 
 type CalculatorFormProps = {
@@ -19,14 +23,7 @@ const CalculatorForm = (props: CalculatorFormProps) => {
       setAnnualIncome('');
       return;
     }
-    // remove all the non degit , non dot charactors form the string
-    // then remove leading zeros except when followed by a dot (preserve "0." and ".5")
-    let amount = value.replace(/[^0-9.]/g, '').replace(/^0+(?=\d)/, '');
-    // handle multiple '.'
-    const parts = amount.split('.');
-    if (parts.length > 2) {
-      amount = parts[0] + '.' + parts[1];
-    }
+    const amount = sanitiseStringNum(value);
     setAnnualIncome(amount);
   };
 

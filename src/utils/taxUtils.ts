@@ -22,8 +22,21 @@ export const calculateTax = (income: number, country: CountryCode) => {
 
 export const formatNumberWithCommas = (str: string) => {
   const parts = str.split('.');
-  // use unary + to convert str-num
   console.log('parts[0]', parts[0]);
+
+  // use unary + to convert str-num
   parts[0] = (+parts[0]).toLocaleString('en');
   return parts.join('.');
+};
+
+export const sanitiseStringNum = (value: string) => {
+  // remove all the non degit , non dot charactors form the string
+  // then remove leading zeros except when followed by a dot (preserve "0." and ".5")
+  let amount = value.replace(/[^0-9.]/g, '').replace(/^0+(?=\d)/, '');
+  // handle multiple '.'
+  const parts = amount.split('.');
+  if (parts.length > 2) {
+    amount = parts[0] + '.' + parts[1];
+  }
+  return amount;
 };
