@@ -1,4 +1,4 @@
-name: CI- Jest & Playwright
+name: CI - Jest & Playwright
 on:
   push:
     branches: [main, master, '**']
