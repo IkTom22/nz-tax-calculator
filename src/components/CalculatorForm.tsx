@@ -4,10 +4,13 @@ import { CountryCode } from '@/src/data/taxBracketsByCountries';
 import { calculateTax, formatNumberWithCommas } from '@/src/utils/taxUtils';
 import { IoClose } from 'react-icons/io5';
 
-const CalculatorForm = () => {
+type CalculatorFormProps = {
+  setCalcResult: React.Dispatch<React.SetStateAction<number>>;
+  setTakeHome: React.Dispatch<React.SetStateAction<number>>;
+};
+const CalculatorForm = (props: CalculatorFormProps) => {
+  const { setCalcResult, setTakeHome } = props;
   const [annualIncome, setAnnualIncome] = useState('');
-  const [calcResult, setCalcResult] = useState(0);
-  const [takeHome, setTakeHome] = useState(0);
   const [selectedCountry, setSelectedCountry] = useState<CountryCode>('nz');
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,7 +72,7 @@ const CalculatorForm = () => {
         {/* country options */}
         <fieldset className="w-full">
           <legend>Select your country:</legend>
-          <div className="flex gap-8 mt-2">
+          <div className="flex w-full justify-between mt-2">
             {['nz', 'au'].map((country) => (
               <div className="flex gap-2 items-center" key={country}>
                 <input
@@ -125,27 +128,6 @@ const CalculatorForm = () => {
           Calculate
         </button>
       </form>
-      {/* Tax display */}
-      <div className="w-full mt-6">
-        <div className="w-full flex justify-between items-center text-2xl">
-          <div className="w-[45%] md:w-[32%]">Tax to Pay:</div>
-          <div className="w-[55%] md:w-[67%] flex justify-between bg-sky-900 px-4 py-2 rounded-[10px] text-white">
-            <span>$</span>
-            <span>{calcResult.toLocaleString('en')}</span>
-          </div>
-        </div>
-      </div>
-      <hr className="w-full text-slate-400 mt-2 mb-2" />
-      {/* Take home display */}
-      <div className="w-full">
-        <div className="w-full flex justify-between items-center text-2xl">
-          <div className="w-[45%] md:w-[32%]">Take Home:</div>
-          <div className="w-[55%] md:w-[67%] flex justify-between bg-sky-900 px-4 py-2 rounded-[10px] text-white">
-            <span>$</span>
-            <span>{takeHome.toLocaleString('en')}</span>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

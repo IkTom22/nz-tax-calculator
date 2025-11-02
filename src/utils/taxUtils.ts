@@ -2,7 +2,6 @@ import {
   taxBracketsByCountries,
   CountryCode,
 } from '@/src/data/taxBracketsByCountries';
-
 export const calculateTax = (income: number, country: CountryCode) => {
   let previousUpto = 0;
   let tax = 0;
